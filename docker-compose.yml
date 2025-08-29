@@ -12,12 +12,12 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
       - "--certificatesresolvers.mytlschallenge.acme.email=${SSL_EMAIL}"
-      - "--certificatesresolvers.mytlschallenge.acme.storage=/traefik/acme/acme.json"
+      - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - traefik_data:/traefik
+      - traefik_data:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   n8n:
@@ -87,7 +87,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.chatwoot.rule=Host(`chat.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.chatwoot.rule=Host(`chatwoot.${DOMAIN_NAME}`)"
       - "traefik.http.routers.chatwoot.entrypoints=websecure"
       - "traefik.http.routers.chatwoot.tls.certresolver=mytlschallenge"
       - "traefik.http.services.chatwoot.loadbalancer.server.port=3000"
