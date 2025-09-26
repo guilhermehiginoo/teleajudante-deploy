@@ -91,7 +91,7 @@ services:
       - "traefik.http.routers.chatwoot.entrypoints=websecure"
       - "traefik.http.routers.chatwoot.tls.certresolver=mytlschallenge"
       - "traefik.http.services.chatwoot.loadbalancer.server.port=3000"
-
+  
   sidekiq:
     <<: *base
     depends_on:
@@ -125,6 +125,20 @@ services:
       - redis_data:/data
     ports:
       - '127.0.0.1:6379:6379'
+ 
+  mysql:
+    image: mysql:8.0.43
+    environment:
+     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+     - MYSQL_DATABASE=${MYSQL_DATABASE}
+     - MYSQL_USER=${MYSQL_USER}
+     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    restart: always
 
 volumes:
   n8n_data:
@@ -133,3 +147,4 @@ volumes:
   storage_data:
   postgres_data:
   redis_data:
+  mysql_data:
